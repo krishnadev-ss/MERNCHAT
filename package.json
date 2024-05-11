@@ -18,6 +18,7 @@
   "description": "",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^2.2.0",
     "colors": "^1.4.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
@@ -26,5 +27,13 @@
     "mongodb": "^6.6.1",
     "mongoose": "^8.3.4",
     "nodemon": "^3.1.0"
+  },
+  "devDependencies": {
+    "crypto-browserify": "^3.12.0",
+    "https-browserify": "^1.0.0",
+    "path-browserify": "^1.0.1",
+    "querystring-es3": "^0.2.1",
+    "stream-http": "^3.2.0",
+    "url": "^0.11.3"
   }
 }
