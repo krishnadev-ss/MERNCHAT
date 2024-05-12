@@ -64,4 +64,20 @@ const authUser = asyncHandler(async (req, res) => {
     }
 });
 
-module.exports = {registerUser, authUser}
+// /API/SEARCH/QUERY
+
+const allUsers = asyncHandler(async (req, res) => {
+    const keyword = req.query.search ? {
+        $or: [  //perform or operation in mongodb
+            {name: {$regex: req.query.search, $options: "i"}}, //using regex for searching helps to match strings in mongodb
+            {email: {$regex: req.query.search, $options: "i"}} // i is using for matching higher and lower cases too
+        ]
+    }
+    : {};
+
+    const users = await User.find(keyword).find({ _id: { $ne: req.user._id }})
+    res.send({users})
+    
+})
+
+module.exports = {registerUser, authUser,allUsers}
