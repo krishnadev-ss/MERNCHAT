@@ -33,6 +33,8 @@ const SignUp = () => {
           data.append("file", pics);
           data.append("upload_preset", "chat-app");
           data.append("cloud_name", "dyesqalbm");
+
+          //cloudinary integration
           fetch("https://api.cloudinary.com/v1_1/dyesqalbm/image/upload", {
             method: "post",
             body: data,
