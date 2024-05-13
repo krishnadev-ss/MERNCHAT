@@ -1,5 +1,3 @@
-// backend/middleware/errorMiddleware.js
-
 const notFound = (req, res, next) => {
     const error = new Error(`Not Found - ${req ? req.originalUrl : 'unknown'}`);
     res.status(404);
