@@ -6,3 +6,15 @@
   background-size: cover;
   background-position: center;
 }
+
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(223, 18, 18, 0.281);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #730e0e;
+}

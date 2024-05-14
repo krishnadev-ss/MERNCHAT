@@ -32,15 +32,16 @@ import { useHistory } from 'react-router-dom'
 import { useDisclosure } from '@chakra-ui/hooks'
 import ChatLoading from './chatLoading'
 import UserListItem from '../userAvatar/UserListItem'
+import {Spinner} from '@chakra-ui/spinner'
 
 
 const SideDrawer = () => {
     const [search, setSearch] = useState("")
     const [searchResult, setSearchResult] = useState([])
     const [loading, setLoading] = useState(false)
-    const [loadingChats, setLoadingChats] = useState([])
+    const [loadingChats, setLoadingChats] = useState()
 
-    const {user} = ChatState();
+    const {user, setSelectedChat, chats, setChats} = ChatState();
     const history = useHistory();
     const {isOpen, onOpen, onClose} = useDisclosure()
 
@@ -75,13 +76,15 @@ const SideDrawer = () => {
             const { data } = await axios.get(`/api/user?search=${search}`, config);
             console.log("Received data:", data); 
             setLoading(false);
-    
-            if (Array.isArray(data)) {
-                setSearchResult(data);
-            } else {
-                // Handle case where data is not an array (e.g., set searchResult to an empty array)
-                setSearchResult([]);
-            }
+            
+    // Check if data.users is an array and not empty
+        if (Array.isArray(data.users) && data.users.length > 0) {
+            setSearchResult(data.users);
+        } else {
+            // Handle case where data.users is not an array or is empty
+            console.log("Error occurred or empty data.users array");
+            setSearchResult([]);
+        }
         } catch (error) {
             console.error("Error fetching data:", error); // Add this line
             toast({
@@ -97,30 +100,30 @@ const SideDrawer = () => {
     
 
     const accessChat = async(userId) => {
-        // try {
-        //     setLoadingChats(true)
-        //     const config = {
-        //         headers: {
-        //             "Content-type": "application/json",
-        //             Authorization: `Bearer ${user.token}`,
-        //         },
-        //     };
-        //     const { data } = await axios.post("/api/chat", { userId }, config);
-        //     if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
-        //     setSelectedChat(data);
-        //     setLoadingChats(false)
-        //     onClose()
+        try {
+            setLoadingChats(true)
+            const config = {
+                headers: {
+                    "Content-type": "application/json",
+                    Authorization: `Bearer ${user.token}`,
+                },
+            };
+            const { data } = await axios.post("/api/chat", { userId }, config);
+            if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
+            setSelectedChat(data);
+            setLoadingChats(false)
+            onClose()
 
-        // } catch (error) {
-        //     toast({
-        //         title: "Error fetching the chat",
-        //         description: error.message,
-        //         status: "error",
-        //         duration: 5000,
-        //         isClosable: true,
-        //         position: "bottom-left",
-        //     })
-        // }
+        } catch (error) {
+            toast({
+                title: "Error fetching the chat",
+                description: error.message,
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+                position: "bottom-left",
+            })
+        }
     }
 
     return (
@@ -177,35 +180,38 @@ const SideDrawer = () => {
                 <DrawerOverlay />
                 <DrawerContent>
                     <DrawerHeader borderBottomWidth="1px">Search Users</DrawerHeader>
-<DrawerBody>
-    <Stack spacing={4}>
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Input
-                placeholder="Search by name or email"
-                mr={2}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-            /> 
-            <Button onClick={handleSearch}>Go</Button>
+        <DrawerBody>
+            <Stack spacing={4}>
+                <Stack direction="row" alignItems="center" justifyContent="space-between">
+                    <Input
+                        placeholder="Search by name or email"
+                        mr={2}
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    /> 
+                    <Button onClick={handleSearch}>Go</Button>
+                    
+                </Stack>
+                {loading ? (
+            <ChatLoading />
+        ) : (
+            console.log("Search Result:", searchResult),
+            searchResult?.map((user) => (
+                <UserListItem
+                    key={user._id} // Assuming _id is a unique identifier for each user
+                    user={user}
+                    handleFunction={() => accessChat(user._id)}
+                />
+            ))
+        )}
+
+        {loadingChats && <Spinner ml="auto" display="flex" />}
+
+                
+            </Stack>
             
-        </Stack>
-        {loading ? (
-    <ChatLoading />
-) : (
-    searchResult?.map((user) => (
-        <UserListItem
-            key={user._id} // Assuming _id is a unique identifier for each user
-            user={user}
-            handleFunction={() => accessChat(user._id)}
-        />
-    ))
-)}
 
-        
-    </Stack>
-    
-
-</DrawerBody>
+        </DrawerBody>
 
 
                 </DrawerContent>

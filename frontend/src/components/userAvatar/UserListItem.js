@@ -29,6 +29,7 @@ const UserListItem = ({user,handleFunction}) => {
         name={user.name}
         src={user.pic}
         />
+        <Box>
         <Text>
             {user.name}
         </Text>
@@ -38,6 +39,7 @@ const UserListItem = ({user,handleFunction}) => {
             <b>Email:</b>
             {user.email}
         </Text>
+    </Box>
     </Box>
   )
 }
