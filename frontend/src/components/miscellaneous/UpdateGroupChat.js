@@ -7,7 +7,7 @@ import UserBadgeItem from '../userAvatar/userBadgeItem'
 import axios from 'axios'
 import UserListItem from '../userAvatar/UserListItem'
 
-const UpdateGrroupChat = ({fetchAgain,setFetchAgain}) => {
+const UpdateGroupChat = ({fetchAgain,setFetchAgain,fetchMessages}) => {
 
     const {isOpen, onOpen, onClose} = useDisclosure()
     const {selectedChat, setSelectedChat} = ChatState()
@@ -48,6 +48,7 @@ const UpdateGrroupChat = ({fetchAgain,setFetchAgain}) => {
         );
         user1._id === user._id ? setSelectedChat() : setSelectedChat(data);
         setFetchAgain(!fetchAgain);
+        fetchMessages();
         
         setLoading(false);
       } catch (error) {
@@ -264,4 +265,4 @@ const UpdateGrroupChat = ({fetchAgain,setFetchAgain}) => {
   )
 }
 
-export default UpdateGrroupChat
+export default UpdateGroupChat
