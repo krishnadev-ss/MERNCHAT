@@ -33,6 +33,9 @@ import { useDisclosure } from '@chakra-ui/hooks'
 import ChatLoading from './chatLoading'
 import UserListItem from '../userAvatar/UserListItem'
 import {Spinner} from '@chakra-ui/spinner'
+import { getSender } from '../../config/getSender'
+import NotificationBadge from "react-notification-badge";
+import { Effect } from "react-notification-badge";
 
 
 const SideDrawer = () => {
@@ -41,7 +44,7 @@ const SideDrawer = () => {
     const [loading, setLoading] = useState(false)
     const [loadingChats, setLoadingChats] = useState()
 
-    const {user, setSelectedChat, chats, setChats} = ChatState();
+    const {user, setSelectedChat, chats, setChats , notification, setNotification} = ChatState();
     const history = useHistory();
     const {isOpen, onOpen, onClose} = useDisclosure()
 
@@ -148,11 +151,35 @@ const SideDrawer = () => {
                     C4CHAT
                 </Center>
 
-                <ButtonGroup gap='2'>
+                <ButtonGroup gap='1'>
+                
                     <Menu>
                         <MenuButton p={1}>
-                            <BellIcon fontSize="2xl" m={1} />
+                        <NotificationBadge
+                count={notification.length}
+                effect={Effect.SCALE}
+              />
+
+                            <BellIcon fontSize="2xl" m={2} alignContent={"center"} p={0.5}/>
+                        
                         </MenuButton>
+                        <MenuList pl={2}>
+                            {!notification.length && "No New Messages"}
+                            {notification.map((notif) => (
+                                <MenuItem
+                                    key={notif._id}
+                                    onClick={() => {
+                                        setSelectedChat(notif.chat);
+                                        setNotification(notification.filter((n) => n !== notif));
+                                    }}
+                                >
+                                    {notif.chat.isGroupChat
+                                        ? `New Message in ${notif.chat.chatName}`
+                                        : `New Message from ${getSender(user, notif.chat.users)}`}
+                                </MenuItem>
+                            ))}
+                            
+                        </MenuList>
                     </Menu>
 
                     <div> {/* Wrapping Menu in a div */}
@@ -170,6 +197,8 @@ const SideDrawer = () => {
                             </MenuList>
                         </Menu>
                     </div>
+
+                   
                 </ButtonGroup>
             </Flex>
 

@@ -3,9 +3,8 @@ import { ChatState } from '../../Context/chatProvider'
 import { Box } from '@chakra-ui/react'
 import SingleChat from '../SingleChat'
 
-const ChatBox = (fetchAgain, setFetchAgain) => {
+const ChatBox = ({ fetchAgain, setFetchAgain }) => { // Fix: Added curly braces around props
   const { selectedChat } = ChatState()
-
 
   return (
     <Box
@@ -18,8 +17,7 @@ const ChatBox = (fetchAgain, setFetchAgain) => {
       borderRadius="lg"
       borderWidth="1px"
     >
-      <SingleChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
-
+      <SingleChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} /> {/* Pass props correctly */}
     </Box>
   )
 }
