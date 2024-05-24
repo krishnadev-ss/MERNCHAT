@@ -5,7 +5,7 @@
   "scripts": {
     "start": "nodemon backend/server.js",
     "server": "nodemon backend/server.js",
-    "build":"npm install && nom install --prefix frontend && npm run build --prefix frontend"
+    "build":"npm install --legacy-peer-deps && nom install --legacy-peer-deps --prefix frontend && npm run build --prefix frontend"
 
 
   },
